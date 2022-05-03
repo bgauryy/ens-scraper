@@ -1,13 +1,24 @@
 const puppeteer = require('puppeteer-extra')
 const StealthPlugin = require('puppeteer-extra-plugin-stealth');
 const fs = require('fs');
-const CHUNK = 15;
+
+const CHUNK = 50;
+const TAKENFILE = 'nums-taken.txt';
+const FREEDOMAINFILE = 'nums-available.txt';
 
 process.setMaxListeners(0);
 puppeteer.use(StealthPlugin());
 
-run(shuffle(getLettersCombinations()));
+const takenDomains = fs.readFileSync(TAKENFILE, {encoding: "utf-8"});
+const availableDOmains = fs.readFileSync(FREEDOMAINFILE, {encoding: "utf-8"});
 
+const arr = [];
+for (let i =27000; i < 40000; i++ ){
+  arr.push(i);
+}
+
+run(arr);
+console.log('Done');
 async function run(arr) {
   do {
     {
@@ -19,10 +30,11 @@ async function run(arr) {
       await Promise.all(promises);
     }
   } while (arr.length > 0);
+  console.log('Done');
 }
 
 async function checkDomain(check) {
-  if (!check) {
+  if (!check || takenDomains.includes(check) || availableDOmains.includes(check)) {
     return;
   }
   try {
@@ -36,11 +48,15 @@ async function checkDomain(check) {
     const isExpired = await page.evaluate(() => {
       return document.querySelector('#root').innerHTML.toLowerCase().includes('expire')
     });
+    const isPremium = await page.evaluate(() => {
+      return document.querySelector('#root').innerHTML.toLowerCase().includes('premium')
+    });
     //await page.screenshot({ path: `${check}.png`, fullPage: true });
     if (!isExpired && !isUnavailable) {
-      console.log('available!!!', check)
-
-      fs.appendFileSync('freeDomains.txt', `${check}\n`);
+      console.log('available!!!', check);
+      fs.appendFileSync(FREEDOMAINFILE, `${check}${isPremium ? ' - PREMIUM' : ''}\n`);
+    } else {
+      fs.appendFileSync(TAKENFILE, `${check}${isPremium ? ' - PREMIUM' : ''}\n`);
     }
     await browser.close();
   } catch (e) {
@@ -71,7 +87,7 @@ function getLettersCombinations() {
     return words;
   };
 
-  return makeWords(3);
+  return makeWords(4);
 }
 
 function shuffle(array) {
