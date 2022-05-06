@@ -1,0 +1,26 @@
+{
+  "name": "ens-scrape",
+  "packageManager": "yarn@3.2.0",
+  "scripts": {
+    "start": "ts-node ./index.ts",
+    "lint": "yarn eslint .",
+    "build": "yarn tsc"
+  },
+  "dependencies": {
+    "@types/puppeteer": "^5.4.6",
+    "puppeteer": "^13.7.0",
+    "puppeteer-extra": "^3.2.3",
+    "puppeteer-extra-plugin-stealth": "^2.9.0",
+    "puppeteer-extra-plugin-user-data-dir": "^2.3.1",
+    "puppeteer-extra-plugin-user-preferences": "^2.3.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.22.0",
+    "@typescript-eslint/parser": "^5.22.0",
+    "eslint": "^8.14.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.2",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.6.4"
+  }
+}
