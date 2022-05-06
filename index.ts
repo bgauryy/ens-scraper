@@ -1,8 +1,9 @@
 import fs from "fs";
 import BrowserPool from "./src/BrowserPool";
 
-const browsersPoolSize = 4;
-const pagesLimit = 5;
+//TODO - move 'browsersPoolSize' 'pagesLimit' to params
+const browsersPoolSize = 5;
+const pagesLimit = 7;
 const CHUNK = browsersPoolSize * pagesLimit;
 const TAKENFILE = "n-taken.txt";
 const FREEDOMAINFILE = "n-available.txt";
@@ -27,12 +28,19 @@ async function run(arr: string[]) {
   async function loop() {
     const promises = [];
     for (let i = 0; i < CHUNK; i++) {
-      promises.push(checkDomain(pagesPool, arr.shift()));
+      const value = arr.shift();
+      if (value) {
+        promises.push(checkDomain(pagesPool, value));
+      }
     }
     await Promise.all(promises);
     const now = Date.now();
     const chunkTime = (now - lastTime) / 1000;
-    console.log(`Chunk time ${chunkTime}, ${chunkTime / CHUNK} per check`);
+    if (chunkTime > 1) {
+      console.log(
+        `Chunk time ${chunkTime}, ${(chunkTime / CHUNK).toFixed(2)} per check`
+      );
+    }
     lastTime = now;
     if (arr.length > 0) {
       await loop();
@@ -40,20 +48,20 @@ async function run(arr: string[]) {
   }
   await loop();
 }
-async function checkDomain(pagesPool: BrowserPool, check: string) {
+async function checkDomain(pagesPool: BrowserPool, value: string) {
   if (
-    !check ||
-    takenDomains.includes(check) ||
-    availableDOmains.includes(check)
+    !value ||
+    takenDomains.includes(value) ||
+    availableDOmains.includes(value)
   ) {
     return;
   }
 
   const page = await pagesPool.getPage();
-  await page.goto(`https://app.ens.domains/search/${check}`, {
+  await page.goto(`https://app.ens.domains/search/${value}`, {
     waitUntil: ["domcontentloaded", "networkidle0"],
   });
-  await page.waitForSelector(`[data-testid="domain-${check}.eth"]`);
+  await page.waitForSelector(`[data-testid="domain-${value}.eth"]`);
   await page.waitForXPath('//div[contains(text(), "singleName.domain.state")]');
 
   const isAvailable = await page.evaluate(() => {
@@ -63,9 +71,9 @@ async function checkDomain(pagesPool: BrowserPool, check: string) {
   });
 
   if (isAvailable) {
-    fs.appendFileSync(FREEDOMAINFILE, `${check}\n`);
+    fs.appendFileSync(FREEDOMAINFILE, `${value}\n`);
   } else {
-    fs.appendFileSync(TAKENFILE, `${check}\n`);
+    fs.appendFileSync(TAKENFILE, `${value}\n`);
   }
   await page.close();
 }
