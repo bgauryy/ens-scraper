@@ -60,7 +60,6 @@ async function checkDomain(pagesPool: BrowserPool, value: string) {
   await page.goto(`https://app.ens.domains/search/${value}`, {
     waitUntil: ["domcontentloaded", "networkidle0"],
   });
-  await page.waitForSelector(`[data-testid="domain-${value}.eth"]`);
   await page.waitForXPath('//div[contains(text(), "singleName.domain.state")]');
 
   const isAvailable = await page.evaluate(() => {
