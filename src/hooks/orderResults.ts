@@ -16,6 +16,7 @@ fs.writeFileSync(
   takenDomains
     .split("\n")
     .map((v) => parseInt(v))
+    .filter((v) => v)
     .sort()
     .join("\n")
 );
@@ -24,6 +25,7 @@ fs.writeFileSync(
   availableDomains
     .split("\n")
     .map((v) => parseInt(v))
+    .filter((v) => v)
     .sort()
     .join("\n")
 );
