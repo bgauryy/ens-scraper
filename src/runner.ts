@@ -1,5 +1,4 @@
 import fs from "fs";
-import path from "path";
 import BrowserPool from "./BrowserPool";
 import {
   browsersPoolSize,
@@ -7,17 +6,6 @@ import {
   FREEDOMAINFILE,
   TAKENFILE,
 } from "./constants";
-
-const takenDomains = fs.readFileSync(
-  path.resolve(__dirname, "../", TAKENFILE),
-  {
-    encoding: "utf-8",
-  }
-);
-const availableDOmains = fs.readFileSync(
-  path.resolve(__dirname, "../", FREEDOMAINFILE),
-  { encoding: "utf-8" }
-);
 
 export async function run(arr: string[]) {
   const inititalLength = arr.length;
@@ -57,14 +45,6 @@ export async function run(arr: string[]) {
   await loop();
 }
 async function checkDomain(browserPool: BrowserPool, value: string) {
-  if (
-    !value ||
-    takenDomains.includes(value) ||
-    availableDOmains.includes(value)
-  ) {
-    return;
-  }
-
   const page = await browserPool.getPage();
   await page.goto(`https://app.ens.domains/search/${value}`, {
     waitUntil: ["domcontentloaded", "networkidle0"],

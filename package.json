@@ -3,7 +3,7 @@
   "packageManager": "yarn@3.2.0",
   "scripts": {
     "start": "yarn ts-node ./index.ts",
-    "lint": "yarn eslint . && yarn orderResults",
+    "lint": "yarn eslint .",
     "orderResults": "yarn ts-node ./src/hooks/orderResults.ts"
   },
   "dependencies": {
