@@ -1,4 +1,4 @@
-import { Browser } from "puppeteer";
+import { Browser, HTTPRequest } from "puppeteer";
 import puppeteer, { VanillaPuppeteer } from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
@@ -25,20 +25,20 @@ export default class BrowserPool {
     if (!this.browsers[browserIndex]) {
       this.browsers[browserIndex] = await puppeteer.launch(this.conf);
     }
-    return await this._createPage(this.browsers[browserIndex]);
+    return await this.createPage(this.browsers[browserIndex]);
   }
 
-  private async _createPage(browser: Browser) {
+  private async createPage(browser: Browser) {
     const page = await browser.newPage();
-    // TODO - set by configuration
-    await page.setRequestInterception(true);
     page.setDefaultNavigationTimeout(0);
+    // TODO - move to page configuration in condtructor (blockResources: true)
+    await page.setRequestInterception(true);
     page.on("request", this.onRequest);
     return page;
   }
 
-  //TODO - fix type
-  private onRequest(req: any) {
+  private onRequest(req: HTTPRequest) {
+    // Block redundant resources
     if (
       req.resourceType() === "image" ||
       req.resourceType() === "stylesheet" ||
