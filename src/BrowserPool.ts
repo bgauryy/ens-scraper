@@ -20,7 +20,7 @@ export default class BrowserPool {
 
   constructor(poolSize: number, conf = DEFAULT_BROWSER_CONF) {
     this.conf = conf;
-    this.poolSize = poolSize || 5;
+    this.poolSize = poolSize;
   }
 
   async getPage() {

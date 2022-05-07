@@ -4,7 +4,7 @@ import BrowserPool from "./BrowserPool";
 
 //TODO - move 'browsersPoolSize' 'pagesLimit' to params
 const browsersPoolSize = 5;
-const pagesLimit = 7;
+const pagesLimit = 5;
 const CHUNK = browsersPoolSize * pagesLimit;
 const TAKENFILE = "n-taken.txt";
 const FREEDOMAINFILE = "n-available.txt";
@@ -20,7 +20,7 @@ const availableDOmains = fs.readFileSync(
 );
 
 export async function run(arr: string[]) {
-  console.log(`ChunkSize ${CHUNK}`);
+  console.log(`Chunk Size ${CHUNK}`);
   const browserPool = new BrowserPool(browsersPoolSize);
   let lastTime = Date.now();
 
@@ -37,7 +37,9 @@ export async function run(arr: string[]) {
     const chunkTime = (now - lastTime) / 1000;
     if (chunkTime > 1) {
       console.log(
-        `Chunk time ${chunkTime}, ${(chunkTime / CHUNK).toFixed(2)} per check`
+        `Chunk time ${chunkTime} seconds | ${(chunkTime / CHUNK).toFixed(
+          2
+        )} seconds per domain check`
       );
     }
     lastTime = now;
