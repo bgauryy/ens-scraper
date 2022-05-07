@@ -1,30 +1,36 @@
 import { run } from "./src/runner";
 import fs from "fs";
 import path from "path";
-import { AVAILABLE_FILE_NAME, UNAVAILABLE_FILE_NAME } from "./src/constants";
+import {
+  AVAILABLE_FILE_NAME,
+  PREMIUM_FILE_NAME,
+  UNAVAILABLE_FILE_NAME,
+} from "./src/constants";
 
 process.setMaxListeners(0);
 
-const takenDomains = fs
-  .readFileSync(path.resolve(__dirname, UNAVAILABLE_FILE_NAME), {
-    encoding: "utf-8",
-  })
-  .split("\n")
-  .filter((val) => val)
-  .map((val) => parseInt(val));
+function getResultsList(filePath: string) {
+  return fs
+    .readFileSync(path.resolve(__dirname, filePath), {
+      encoding: "utf-8",
+    })
+    .split("\n")
+    .filter((val) => val)
+    .map((val) => parseInt(val));
+}
 
-const availableDOmains = fs
-  .readFileSync(path.resolve(__dirname, AVAILABLE_FILE_NAME), {
-    encoding: "utf-8",
-  })
-  .split("\n")
-  .filter((val) => val)
-  .map((val) => parseInt(val));
+const takenDomains = getResultsList(UNAVAILABLE_FILE_NAME);
+const availableDOmains = getResultsList(AVAILABLE_FILE_NAME);
+const premiumDomains = getResultsList(PREMIUM_FILE_NAME);
 
 const ethDomainsToCheck: string[] = [];
 for (let i = 10000; i < 150000; i++) {
   const value = i;
-  if (!takenDomains.includes(value) && !availableDOmains.includes(value)) {
+  if (
+    !premiumDomains.includes(value) &&
+    !takenDomains.includes(value) &&
+    !availableDOmains.includes(value)
+  ) {
     ethDomainsToCheck.push(String(value));
   }
 }
