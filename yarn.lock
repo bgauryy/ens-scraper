@@ -590,6 +590,7 @@ __metadata:
     "@typescript-eslint/parser": ^5.22.0
     eslint: ^8.14.0
     eslint-plugin-prettier: ^4.0.0
+    husky: ^7.0.4
     prettier: ^2.6.2
     puppeteer: ^13.7.0
     puppeteer-extra: ^3.2.3
@@ -1024,6 +1025,15 @@ __metadata:
     agent-base: 6
     debug: 4
   checksum: 571fccdf38184f05943e12d37d6ce38197becdd69e58d03f43637f7fa1269cf303a7d228aa27e5b27bbd3af8f09fd938e1c91dcfefff2df7ba77c20ed8dfc765
+  languageName: node
+  linkType: hard
+
+"husky@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "husky@npm:7.0.4"
+  bin:
+    husky: lib/bin.js
+  checksum: c6ec4af63da2c9522da8674a20ad9b48362cc92704896cc8a58c6a2a39d797feb2b806f93fbd83a6d653fbdceb2c3b6e0b602c6b2e8565206ffc2882ef7db9e9
   languageName: node
   linkType: hard
 
