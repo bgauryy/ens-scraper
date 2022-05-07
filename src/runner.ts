@@ -34,7 +34,7 @@ export async function run(arr: string[]) {
         )} seconds per domain check | ${(
           (checks / inititalLength) *
           100
-        ).toFixed(2)}%`
+        ).toFixed(2)}% (${checks}/${inititalLength})`
       );
     }
     lastTime = now;
