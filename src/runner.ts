@@ -45,30 +45,31 @@ export async function run(arr: string[]) {
   await loop();
 }
 async function checkDomain(browserPool: BrowserPool, value: string) {
-  const page = await browserPool.getPage();
-  await page.goto(`https://app.ens.domains/search/${value}`, {
-    waitUntil: ["domcontentloaded", "networkidle0"],
-  });
   try {
+    const page = await browserPool.getPage();
+    await page.goto(`https://app.ens.domains/search/${value}`, {
+      waitUntil: ["domcontentloaded", "networkidle0"],
+    });
+
     await page.waitForXPath(
       '//div[contains(text(), "singleName.domain.state")]',
       { timeout: 20000 }
     );
+
+    const isAvailable = await page.evaluate(() => {
+      return document.body.innerHTML.includes(
+        "singleName.domain.state.available"
+      );
+    });
+
+    if (isAvailable) {
+      fs.appendFileSync(FREEDOMAINFILE, `\n${value}`);
+    } else {
+      fs.appendFileSync(TAKENFILE, `\n${value}`);
+    }
+    await page.close();
   } catch (e) {
     console.log(`Failure - ${value}`);
     return;
   }
-
-  const isAvailable = await page.evaluate(() => {
-    return document.body.innerHTML.includes(
-      "singleName.domain.state.available"
-    );
-  });
-
-  if (isAvailable) {
-    fs.appendFileSync(FREEDOMAINFILE, `\n${value}`);
-  } else {
-    fs.appendFileSync(TAKENFILE, `\n${value}`);
-  }
-  await page.close();
 }

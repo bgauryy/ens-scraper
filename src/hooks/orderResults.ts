@@ -2,7 +2,6 @@ import fs from "fs";
 import path from "path";
 import { FREEDOMAINFILE, TAKENFILE } from "../constants";
 
-console.log('orderResults.ts');
 const takenDomainsPath = path.resolve(__dirname, "../../", TAKENFILE);
 const availableDomainsPath = path.resolve(__dirname, "../../", FREEDOMAINFILE);
 const takenDomains = fs.readFileSync(takenDomainsPath, {
