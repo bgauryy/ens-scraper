@@ -1,7 +1,7 @@
 import fs from "fs";
 import BrowserPool from "./BrowserPool";
 import {
-  browsersPoolSize,
+  BROWSER_POOL_SIZE,
   CHUNK,
   FREEDOMAINFILE,
   TAKENFILE,
@@ -10,7 +10,7 @@ import {
 export async function run(arr: string[]) {
   const inititalLength = arr.length;
   let checks = 0;
-  const browserPool = new BrowserPool(browsersPoolSize);
+  const browserPool = new BrowserPool(BROWSER_POOL_SIZE);
   let lastTime = Date.now();
 
   console.log(`Chunk Size ${CHUNK} | Check ${inititalLength}`);
