@@ -6,10 +6,6 @@ A POC for **ENS** (https://app.ens.domains/) scrapping tool
 
  
 > This is an expirimental code!
-> Feel free to fork or contribute
-
-
- 
 
 ##### Requirements
 - yarn >= 3.2.0
