@@ -60,7 +60,15 @@ async function checkDomain(pagesPool: BrowserPool, value: string) {
   await page.goto(`https://app.ens.domains/search/${value}`, {
     waitUntil: ["domcontentloaded", "networkidle0"],
   });
-  await page.waitForXPath('//div[contains(text(), "singleName.domain.state")]');
+  try {
+    await page.waitForXPath(
+      '//div[contains(text(), "singleName.domain.state")]',
+      { timeout: 20000 }
+    );
+  } catch (e) {
+    console.log(`Failure - ${value}`);
+    return;
+  }
 
   const isAvailable = await page.evaluate(() => {
     return document.body.innerHTML.includes(
