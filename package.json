@@ -1,6 +1,10 @@
 {
   "name": "ens-scraper",
   "packageManager": "yarn@3.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bgauryy/ens-scraper.git"
+  },
   "scripts": {
     "start": "yarn ts-node ./index.ts",
     "lint": "yarn eslint .",
