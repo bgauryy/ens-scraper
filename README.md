@@ -6,7 +6,8 @@ A POC for **ENS** (https://app.ens.domains/) scrapping tool
 
  
 > This is an expirimental code!
-> Available addresses are on n-available.txt
+> 
+> Available addresses are in this file *n-available.txt*
 
 ##### Requirements
 - yarn >= 3.2.0
