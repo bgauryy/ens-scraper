@@ -10,11 +10,8 @@ const DEFAULT_BROWSER_CONF: Parameters<VanillaPuppeteer["launch"]>[0] = {
 };
 
 export default class BrowserPool {
-  private conf: Parameters<VanillaPuppeteer["launch"]>[0] = {
-    headless: true,
-    args: ["--incognito"],
-  };
-  private poolSize;
+  private conf: Parameters<VanillaPuppeteer["launch"]>[0];
+  private poolSize: number;
   private browsers: Browser[] = [];
   private index = 0;
 

@@ -4,7 +4,7 @@ import BrowserPool from "./BrowserPool";
 
 //TODO - move 'browsersPoolSize' 'pagesLimit' to params
 const browsersPoolSize = 5;
-const pagesLimit = 5;
+const pagesLimit = 8;
 const CHUNK = browsersPoolSize * pagesLimit;
 const TAKENFILE = "n-taken.txt";
 const FREEDOMAINFILE = "n-available.txt";
