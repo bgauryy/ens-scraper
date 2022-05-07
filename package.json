@@ -33,6 +33,6 @@
     "node": ">=16.0.0"
   },
   "lint-staged": {
-    "*": "yarn orderResults"
+    "*.txt": "yarn orderResults"
   }
 }
