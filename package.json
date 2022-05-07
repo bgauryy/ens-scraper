@@ -28,8 +28,8 @@
     "node": ">=16.0.0"
   },
   "husky": {
-  "hooks": {
-    "pre-commit": "yarn orderResults"
-  }
+    "hooks": {
+      "pre-commit": "yarn orderResults"
+    }
  }
 }
