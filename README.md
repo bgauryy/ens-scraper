@@ -3,8 +3,12 @@
 A POC for **ENS** (https://app.ens.domains/) scrapping tool
 
  **~0.5 seconds per value check**
- > This is an expirimental code!
-Feel free to fork or contribute
+
+ 
+> This is an expirimental code!
+> Feel free to fork or contribute
+
+
  
 
 ##### Requirements
@@ -13,3 +17,5 @@ Feel free to fork or contribute
 ##### Run 
 - yarn install
 - yarn start
+
+![Alt text](./assets/example.png "Title")
