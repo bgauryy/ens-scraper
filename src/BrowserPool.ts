@@ -14,7 +14,6 @@ export default class BrowserPool {
     headless: true,
     args: ["--incognito"],
   };
-  private timeout = 250;
   private poolSize;
   private browsers: Browser[] = [];
   private index = 0;
