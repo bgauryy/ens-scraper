@@ -2,7 +2,7 @@
 
 A POC for **ENS** (https://app.ens.domains/) scrapping tool
 
- **~0.4 seconds per value check**
+ **~0.4 seconds for a domain check (per process)**
 
  
 > This is an expirimental code! (not production ready...)
