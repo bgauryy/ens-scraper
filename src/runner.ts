@@ -86,9 +86,9 @@ async function checkDomain(browserPool: BrowserPool, value: string) {
   });
 
   if (isAvailable) {
-    fs.appendFileSync(FREEDOMAINFILE, `${value}\n`);
+    fs.appendFileSync(FREEDOMAINFILE, `\n${value}`);
   } else {
-    fs.appendFileSync(TAKENFILE, `${value}\n`);
+    fs.appendFileSync(TAKENFILE, `\n${value}`);
   }
   await page.close();
 }
