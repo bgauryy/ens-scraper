@@ -21,7 +21,7 @@ const availableDOmains = fs.readFileSync(
 
 export async function run(arr: string[]) {
   console.log(`ChunkSize ${CHUNK}`);
-  const pagesPool = new BrowserPool(browsersPoolSize);
+  const browserPool = new BrowserPool(browsersPoolSize);
   let lastTime = Date.now();
 
   async function loop() {
@@ -29,7 +29,7 @@ export async function run(arr: string[]) {
     for (let i = 0; i < CHUNK; i++) {
       const value = arr.shift();
       if (value) {
-        promises.push(checkDomain(pagesPool, value));
+        promises.push(checkDomain(browserPool, value));
       }
     }
     await Promise.all(promises);
@@ -47,7 +47,7 @@ export async function run(arr: string[]) {
   }
   await loop();
 }
-async function checkDomain(pagesPool: BrowserPool, value: string) {
+async function checkDomain(browserPool: BrowserPool, value: string) {
   if (
     !value ||
     takenDomains.includes(value) ||
@@ -56,7 +56,7 @@ async function checkDomain(pagesPool: BrowserPool, value: string) {
     return;
   }
 
-  const page = await pagesPool.getPage();
+  const page = await browserPool.getPage();
   await page.goto(`https://app.ens.domains/search/${value}`, {
     waitUntil: ["domcontentloaded", "networkidle0"],
   });
