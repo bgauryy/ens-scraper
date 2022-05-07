@@ -5,13 +5,14 @@ A POC for **ENS** (https://app.ens.domains/) scrapping tool
  **~0.4 seconds per value check**
 
  
-> This is an expirimental code!
+> This is an expirimental code! (not production ready...)
 > 
 > Last scan available addresses: *n-available.txt*
 
 ##### Requirements
 - yarn >= 3.2.0
 - node >=16
+- 
 ##### Run 
 - yarn install
 - yarn start
