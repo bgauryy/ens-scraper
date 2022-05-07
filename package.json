@@ -3,7 +3,8 @@
   "packageManager": "yarn@3.2.0",
   "scripts": {
     "start": "yarn ts-node ./index.ts",
-    "lint": "yarn eslint ."
+    "lint": "yarn eslint . && yarn orderResults",
+    "orderResults": "yarn ts-node ./src/hooks/orderResults.ts"
   },
   "dependencies": {
     "@types/puppeteer": "^5.4.6",

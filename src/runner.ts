@@ -1,13 +1,13 @@
 import fs from "fs";
 import path from "path";
 import BrowserPool from "./BrowserPool";
+import {
+  browsersPoolSize,
+  CHUNK,
+  FREEDOMAINFILE,
+  TAKENFILE,
+} from "./constants";
 
-//TODO - move 'browsersPoolSize' 'pagesLimit' to params
-const browsersPoolSize = 5;
-const pagesLimit = 8;
-const CHUNK = browsersPoolSize * pagesLimit;
-const TAKENFILE = "n-taken.txt";
-const FREEDOMAINFILE = "n-available.txt";
 const takenDomains = fs.readFileSync(
   path.resolve(__dirname, "../", TAKENFILE),
   {
@@ -20,9 +20,12 @@ const availableDOmains = fs.readFileSync(
 );
 
 export async function run(arr: string[]) {
-  console.log(`Chunk Size ${CHUNK}`);
+  const inititalLength = arr.length;
+  let checks = 0;
   const browserPool = new BrowserPool(browsersPoolSize);
   let lastTime = Date.now();
+
+  console.log(`Chunk Size ${CHUNK} | Check ${inititalLength}`);
 
   async function loop() {
     const promises = [];
@@ -32,6 +35,7 @@ export async function run(arr: string[]) {
         promises.push(checkDomain(browserPool, value));
       }
     }
+    checks += CHUNK;
     await Promise.all(promises);
     const now = Date.now();
     const chunkTime = (now - lastTime) / 1000;
@@ -39,7 +43,10 @@ export async function run(arr: string[]) {
       console.log(
         `Chunk time ${chunkTime} seconds | ${(chunkTime / CHUNK).toFixed(
           2
-        )} seconds per domain check`
+        )} seconds per domain check | ${(
+          (checks / inititalLength) *
+          100
+        ).toFixed(2)}%`
       );
     }
     lastTime = now;
