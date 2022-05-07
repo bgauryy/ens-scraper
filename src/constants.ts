@@ -1,5 +1,5 @@
 //TODO - move to params
-//TODO - optimize site dynamically
+//TODO - optimize dynamically
 export const BROWSER_POOL_SIZE = 5;
 export const PAGE_LIMIT = 5;
 export const CHUNK = BROWSER_POOL_SIZE * PAGE_LIMIT;
