@@ -1,31 +1,28 @@
 import fs from "fs";
 import path from "path";
-import { FREEDOMAINFILE, TAKENFILE } from "../constants";
+import {
+  AVAILABLE_FILE_NAME,
+  UNAVAILABLE_FILE_NAME,
+  PREMIUM_FILE_NAME,
+} from "../constants";
 
-const takenDomainsPath = path.resolve(__dirname, "../../", TAKENFILE);
-const availableDomainsPath = path.resolve(__dirname, "../../", FREEDOMAINFILE);
-const takenDomains = fs.readFileSync(takenDomainsPath, {
-  encoding: "utf-8",
-});
-const availableDomains = fs.readFileSync(availableDomainsPath, {
-  encoding: "utf-8",
-});
+sortResults(AVAILABLE_FILE_NAME);
+sortResults(UNAVAILABLE_FILE_NAME);
+sortResults(PREMIUM_FILE_NAME);
 
-fs.writeFileSync(
-  takenDomainsPath,
-  takenDomains
-    .split("\n")
-    .map((v) => parseInt(v))
-    .filter((v) => v)
-    .sort()
-    .join("\n")
-);
-fs.writeFileSync(
-  availableDomainsPath,
-  availableDomains
-    .split("\n")
-    .map((v) => parseInt(v))
-    .filter((v) => v)
-    .sort()
-    .join("\n")
-);
+function sortResults(fileName: string) {
+  const filePath = path.resolve(__dirname, "../../", fileName);
+  const fileContent = fs.readFileSync(filePath, {
+    encoding: "utf-8",
+  });
+
+  fs.writeFileSync(
+    filePath,
+    fileContent
+      .split("\n")
+      .map((v) => parseInt(v))
+      .filter((v) => v)
+      .sort()
+      .join("\n")
+  );
+}

@@ -3,8 +3,9 @@ import BrowserPool from "./BrowserPool";
 import {
   BROWSER_POOL_SIZE,
   CHUNK,
-  FREEDOMAINFILE,
-  TAKENFILE,
+  AVAILABLE_FILE_NAME,
+  UNAVAILABLE_FILE_NAME,
+  PREMIUM_FILE_NAME,
 } from "./constants";
 
 export async function run(arr: string[]) {
@@ -62,10 +63,18 @@ async function checkDomain(browserPool: BrowserPool, value: string) {
       );
     });
 
-    if (isAvailable) {
-      fs.appendFileSync(FREEDOMAINFILE, `\n${value}`);
+    const isPremium = await page.evaluate(() => {
+      return document.body.innerHTML.includes(
+        "singleName.expiry.isUnderPremiumSale"
+      );
+    });
+
+    if (isPremium) {
+      fs.appendFileSync(PREMIUM_FILE_NAME, `\n${value}`);
+    } else if (isAvailable) {
+      fs.appendFileSync(AVAILABLE_FILE_NAME, `\n${value}`);
     } else {
-      fs.appendFileSync(TAKENFILE, `\n${value}`);
+      fs.appendFileSync(UNAVAILABLE_FILE_NAME, `\n${value}`);
     }
     await page.close();
   } catch (e) {

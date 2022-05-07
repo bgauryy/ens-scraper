@@ -1,12 +1,12 @@
 import { run } from "./src/runner";
 import fs from "fs";
 import path from "path";
-import { FREEDOMAINFILE, TAKENFILE } from "./src/constants";
+import { AVAILABLE_FILE_NAME, UNAVAILABLE_FILE_NAME } from "./src/constants";
 
 process.setMaxListeners(0);
 
 const takenDomains = fs
-  .readFileSync(path.resolve(__dirname, TAKENFILE), {
+  .readFileSync(path.resolve(__dirname, UNAVAILABLE_FILE_NAME), {
     encoding: "utf-8",
   })
   .split("\n")
@@ -14,7 +14,9 @@ const takenDomains = fs
   .map((val) => parseInt(val));
 
 const availableDOmains = fs
-  .readFileSync(path.resolve(__dirname, FREEDOMAINFILE), { encoding: "utf-8" })
+  .readFileSync(path.resolve(__dirname, AVAILABLE_FILE_NAME), {
+    encoding: "utf-8",
+  })
   .split("\n")
   .filter((val) => val)
   .map((val) => parseInt(val));
