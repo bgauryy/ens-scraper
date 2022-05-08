@@ -24,7 +24,7 @@ const availableDOmains = getResultsList(AVAILABLE_FILE_NAME);
 const premiumDomains = getResultsList(PREMIUM_FILE_NAME);
 
 const ethDomainsToCheck: string[] = [];
-for (let i = 100000; i < 200000; i++) {
+for (let i = 100; i < 200000; i++) {
   const value = i;
   if (
     !premiumDomains.includes(value) &&
