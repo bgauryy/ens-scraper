@@ -12,12 +12,20 @@ const DEFAULT_BROWSER_CONF: Parameters<VanillaPuppeteer["launch"]>[0] = {
 export default class BrowserPool {
   private conf: Parameters<VanillaPuppeteer["launch"]>[0];
   private poolSize: number;
+  private pageLimit: number;
   private browsers: Browser[] = [];
   private index = 0;
+  private chunk = 0;
 
-  constructor(poolSize: number, conf = DEFAULT_BROWSER_CONF) {
+  constructor(
+    poolSize: number,
+    pageLimit: number,
+    conf = DEFAULT_BROWSER_CONF
+  ) {
     this.conf = conf;
     this.poolSize = poolSize;
+    this.pageLimit = pageLimit;
+    this.chunk = this.poolSize * this.pageLimit;
   }
 
   async getPage() {
@@ -26,6 +34,10 @@ export default class BrowserPool {
       this.browsers[browserIndex] = await puppeteer.launch(this.conf);
     }
     return await this.createPage(this.browsers[browserIndex]);
+  }
+
+  getChunk() {
+    return this.chunk;
   }
 
   private async createPage(browser: Browser) {

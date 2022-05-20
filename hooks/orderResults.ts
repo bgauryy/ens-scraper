@@ -1,10 +1,12 @@
 import fs from "fs";
 import path from "path";
-import {
-  AVAILABLE_FILE_NAME,
-  UNAVAILABLE_FILE_NAME,
-  PREMIUM_FILE_NAME,
-} from "../constants";
+
+//TODO - make constant
+export const AVAILABLE_FILE_NAME = "n-available.txt";
+export const PREMIUM_FILE_NAME = "n-premium.txt";
+export const UNAVAILABLE_FILE_NAME = "n-unavailable.txt";
+export const AVAILABLE_4W_FILE_NAME = "w4-available.txt";
+export const PREMIUM_4W_FILE_NAME = "w4-premium.txt";
 
 sortResults(AVAILABLE_FILE_NAME);
 sortResults(UNAVAILABLE_FILE_NAME);

@@ -1,84 +1,70 @@
-import fs from "fs";
 import BrowserPool from "./BrowserPool";
-import {
-  BROWSER_POOL_SIZE,
-  CHUNK,
-  AVAILABLE_FILE_NAME,
-  UNAVAILABLE_FILE_NAME,
-  PREMIUM_FILE_NAME,
-} from "./constants";
+import { getDomainStatus } from "./DomainChecker";
 
-export async function run(arr: string[]) {
-  const inititalLength = arr.length;
+export enum DOMAIN_STATUS {
+  AVAILABLE,
+  UNAVAILABLE,
+  PREMIUM,
+  FAILURE,
+}
+
+export type RUNNER_HANDLER = (domain: string, status: DOMAIN_STATUS) => void;
+
+export type RUNNER_CONF = {
+  poolSize: number;
+  pageLimit: number;
+};
+
+export async function run(
+  valuesToCheck: string[],
+  handler: RUNNER_HANDLER,
+  conf: RUNNER_CONF = {
+    poolSize: 5,
+    pageLimit: 8,
+  }
+) {
+  const inititalLength = valuesToCheck.length;
   let checks = 0;
-  const browserPool = new BrowserPool(BROWSER_POOL_SIZE);
+  const browserPool = new BrowserPool(conf.poolSize, conf.pageLimit);
   let lastTime = Date.now();
 
-  console.log(`Chunk Size ${CHUNK} | Check ${inititalLength}`);
+  console.log(`Chunk Size ${browserPool.getChunk()} | Check ${inititalLength}`);
 
   async function loop() {
     const promises = [];
-    for (let i = 0; i < CHUNK; i++) {
-      const value = arr.shift();
+    for (let i = 0; i < browserPool.getChunk(); i++) {
+      const value = valuesToCheck.shift();
       if (value) {
-        promises.push(checkDomain(browserPool, value));
+        promises.push(checkDomain(browserPool, value, handler));
       }
     }
-    checks += CHUNK;
+    checks += browserPool.getChunk();
     await Promise.all(promises);
     const now = Date.now();
     const chunkTime = (now - lastTime) / 1000;
     if (chunkTime > 1) {
       console.log(
-        `Chunk time ${chunkTime} seconds | ${(chunkTime / CHUNK).toFixed(
-          2
-        )} seconds per domain check | ${(
+        `Chunk time ${chunkTime} seconds | ${(
+          chunkTime / browserPool.getChunk()
+        ).toFixed(2)} seconds per domain check | ${(
           (checks / inititalLength) *
           100
         ).toFixed(2)}% (${checks}/${inititalLength})`
       );
     }
     lastTime = now;
-    if (arr.length > 0) {
+    if (valuesToCheck.length > 0) {
       await loop();
     }
   }
   await loop();
 }
-async function checkDomain(browserPool: BrowserPool, value: string) {
-  try {
-    const page = await browserPool.getPage();
-    await page.goto(`https://app.ens.domains/search/${value}`, {
-      waitUntil: ["domcontentloaded", "networkidle0"],
-    });
 
-    await page.waitForXPath(
-      '//div[contains(text(), "singleName.domain.state")]',
-      { timeout: 20000 }
-    );
-
-    const isAvailable = await page.evaluate(() => {
-      return document.body.innerHTML.includes(
-        "singleName.domain.state.available"
-      );
-    });
-
-    const isPremium = await page.evaluate(() => {
-      return document.body.innerHTML.includes(
-        "singleName.expiry.isUnderPremiumSale"
-      );
-    });
-
-    if (isPremium) {
-      fs.appendFileSync(PREMIUM_FILE_NAME, `\n${value}`);
-    } else if (isAvailable) {
-      fs.appendFileSync(AVAILABLE_FILE_NAME, `\n${value}`);
-    } else {
-      fs.appendFileSync(UNAVAILABLE_FILE_NAME, `\n${value}`);
-    }
-    await page.close();
-  } catch (e) {
-    console.log(`Failure - ${value}`);
-    return;
-  }
+async function checkDomain(
+  browserPool: BrowserPool,
+  domain: string,
+  handler: RUNNER_HANDLER
+) {
+  const status = await getDomainStatus(browserPool, domain);
+  handler(domain, status);
 }

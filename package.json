@@ -1,14 +1,21 @@
 {
   "name": "ens-scraper",
   "packageManager": "yarn@3.2.0",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "files": [
+    "dist"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/bgauryy/ens-scraper.git"
   },
   "scripts": {
+    "prepublish": "yarn build",
+    "build": "tsc",
     "start": "yarn ts-node ./index.ts",
     "lint": "yarn eslint .",
-    "orderResults": "yarn ts-node ./src/hooks/orderResults.ts"
+    "orderResults": ""
   },
   "dependencies": {
     "@types/puppeteer": "^5.4.6",
@@ -19,6 +26,7 @@
     "puppeteer-extra-plugin-user-preferences": "^2.3.1"
   },
   "devDependencies": {
+    "@types/node": "^16.0.0",
     "@typescript-eslint/eslint-plugin": "^5.22.0",
     "@typescript-eslint/parser": "^5.22.0",
     "eslint": "^8.14.0",
